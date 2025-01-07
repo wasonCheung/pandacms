@@ -27,18 +27,16 @@ class EditRole extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        $permissions = array_filter($data, function ($key) {
-            return str_starts_with($key, 'permissions@');
-        }, ARRAY_FILTER_USE_KEY);
+        $permissions = $data['permissions'] ?? [];
 
         $this->permissions = collect($permissions)
             ->values()
             ->flatten()
             ->unique();
 
-        return array_filter($data, function ($key) {
-            return ! str_starts_with($key, 'permissions@');
-        }, ARRAY_FILTER_USE_KEY);
+        unset($data['permissions']);
+
+        return $data;
     }
 
     protected function afterSave(): void

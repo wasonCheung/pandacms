@@ -59,8 +59,7 @@ class ResourceComponent
 
     protected function buildFieldset(Resource|string $resource, array $permissions): Fieldset
     {
-        return Fieldset::make()
-            ->label($resource::getModelLabel())
+        return Fieldset::make($resource::getModelLabel())
             ->schema([
                 $this->buildCheckboxList($resource, $permissions),
             ]);
@@ -68,7 +67,7 @@ class ResourceComponent
 
     protected function buildCheckboxList(Resource|string $resource, array $permissions): CheckboxList
     {
-        return CheckboxList::make('permissions@'.class_basename($resource))
+        return CheckboxList::make('permissions.'.$resource)
             ->hiddenLabel()
             ->afterStateHydrated(fn (
                 Component $component,
