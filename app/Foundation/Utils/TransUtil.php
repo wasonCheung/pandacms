@@ -50,8 +50,14 @@ class TransUtil
             $class = $model;
         }
 
-        return TransDO::make(self::parseModelKey($class).".$column.$value")
-            ->notFound($value);
+        $key = self::parseModelKey($class).".$column";
+
+        if ($value) {
+            return TransDO::make($key.'.'.$value)
+                ->notFound($value);
+        }
+
+        return TransDO::make($key);
     }
 
     public static function parseClassGroupName(string $class): string
@@ -85,7 +91,7 @@ class TransUtil
 
     public static function parseModelName(string $model): string
     {
-        return strtolower($model);
+        return strtolower(class_basename($model));
     }
 
     public static function parseModelKey(string $model)

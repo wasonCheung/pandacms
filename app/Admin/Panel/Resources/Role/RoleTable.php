@@ -53,14 +53,14 @@ class RoleTable extends ResourceTable
             })
             ->badge()
             ->state(fn ($record,
-            ) => __model($record, 'guard_name')->fallback()->getTranslation())
+            ) => __model($record, 'guard_name')->fallback())
             ->label(__class(__CLASS__, 'guard_name'));
     }
 
     public function nameColumn(): Column
     {
         return TextColumn::make('name')
-            ->state(fn ($record) => __model($record, 'name')->fallback()->getTranslation())
+            ->state(fn ($record) => __model($record, 'name')->fallback())
             ->label(__class(__CLASS__, 'name'));
     }
 }

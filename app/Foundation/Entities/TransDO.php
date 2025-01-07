@@ -15,7 +15,7 @@ class TransDO implements Htmlable, Stringable
 
     private string $key;
 
-    private ?string $notFound = null;
+    private string $notFound = '';
 
     private array $replacements = [];
 
@@ -28,14 +28,14 @@ class TransDO implements Htmlable, Stringable
         return $this;
     }
 
-    public function notFound(?string $notFound): self
+    public function notFound(string $notFound): self
     {
         $this->notFound = $notFound;
 
         return $this;
     }
 
-    public function getNotFound(): ?string
+    public function getNotFound(): string
     {
         return $this->notFound;
     }

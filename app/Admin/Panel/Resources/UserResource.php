@@ -7,7 +7,7 @@ namespace App\Admin\Panel\Resources;
 use App\Admin\Panel\Resources\User\Pages\CreateUser;
 use App\Admin\Panel\Resources\User\Pages\EditUser;
 use App\Admin\Panel\Resources\User\Pages\ListUsers;
-use App\Shared\Models\User;
+use App\Foundation\Models\User;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;

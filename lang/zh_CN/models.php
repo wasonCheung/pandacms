@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 return [
     'role' => [
         'name' => [
@@ -10,5 +13,5 @@ return [
             'portal' => '前台',
             'api' => '接口',
         ],
-    ]
+    ],
 ];
