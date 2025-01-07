@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Admin;
 
-use App\Admin\Exceptions\LivewireHook;
+use App\Admin\Exceptions\ComponentExceptionHook;
 use App\Admin\Services\PanelService;
 use Filament\Facades\Filament;
 use Filament\Panel;
@@ -20,22 +20,17 @@ class AdminServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->registerPanelService();
+        $this->registerLivewireHooks();
     }
 
     /** @noinspection PhpParamsInspection */
     private function registerPanelService(): void
     {
-
         Filament::registerPanel(fn (): Panel => $this->app->make(PanelService::class)->panel);
     }
 
-    public function boot(): void
+    private function registerLivewireHooks(): void
     {
-        $this->bootLivewireHooks();
-    }
-
-    private function bootLivewireHooks(): void
-    {
-        ComponentHookRegistry::register(LivewireHook::class);
+        ComponentHookRegistry::register(ComponentExceptionHook::class);
     }
 }

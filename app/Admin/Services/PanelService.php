@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Admin\Services;
 
-use App\Admin\Constants\Constants;
-use App\Admin\Http\Panel\Pages\Login;
+use App\Admin\Panel\Pages\LoginPage;
+use App\Foundation\Enums\DefaultGuard;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -23,7 +23,7 @@ class PanelService
 {
     public const ID = 'admin';
 
-    public const GUARD = Constants::GUARD_NAME;
+    public const GUARD = DefaultGuard::Admin->value;
 
     public function __construct(public Panel $panel, protected Repository $config)
     {
@@ -34,22 +34,22 @@ class PanelService
             ->spa()
             ->unsavedChangesAlerts()
             ->databaseTransactions()
-            ->login(Login::class)
+            ->login(LoginPage::class)
             ->path($this->getPath())
             ->colors($this->getColors())
             ->authMiddleware($this->getAuthMiddlewares())
             ->middleware($this->getMiddlewares())
             ->discoverResources(
-                app_path('Admin/Http/Panel/Resources'),
-                'App\\Admin\\Http\\Panel\\Resources'
+                app_path('Admin/Panel/Resources'),
+                'App\\Admin\\Panel\\Resources'
             )
             ->discoverPages(
-                app_path('Admin/Http/Panel/Pages'),
-                'App\\Admin\\Http\\Panel\\Pages'
+                app_path('Admin/Panel/Pages'),
+                'App\\Admin\\Panel\\Pages'
             )
             ->discoverWidgets(
-                app_path('Admin/Http/Panel/Widgets'),
-                'App\\Admin\\Http\\Panel\\Widgets'
+                app_path('Admin/Panel/Widgets'),
+                'App\\Admin\\Panel\\Widgets'
             );
     }
 
