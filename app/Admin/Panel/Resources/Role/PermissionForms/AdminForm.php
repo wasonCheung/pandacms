@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace App\Admin\Panel\Resources\Role\PermissionForms;
 
-use App\Admin\Panel\Resources\Role\PermissionForms\Admin\ResourceComponent;
+use App\Admin\Panel\Resources\Role\PermissionForms\Admin\ResourcePermissionComponent;
 use Filament\Forms\Components\Tabs;
 use Filament\Resources\Components\Tab;
 
-class AdminPermissionForm
+class AdminForm
 {
-    public const FIELD_NAME = 'permissions';
-
     public const DEFAULT_COMPONENTS = [
-        ResourceComponent::class,
+        ResourcePermissionComponent::class,
     ];
 
     protected array $componets = [];
@@ -26,7 +24,7 @@ class AdminPermissionForm
 
     public function getComponent(): Tabs
     {
-        return Tabs::make(self::FIELD_NAME)
+        return Tabs::make()
             ->columnSpan('full')
             ->contained()
             ->tabs($this->componets);

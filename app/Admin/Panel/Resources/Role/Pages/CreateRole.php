@@ -18,9 +18,7 @@ class CreateRole extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $permissions = $data['permissions'] ?? [];
-
-        $this->permissions = collect($permissions)
+        $this->permissions = collect($data['permissions'] ?? [])
             ->values()
             ->flatten()
             ->unique();

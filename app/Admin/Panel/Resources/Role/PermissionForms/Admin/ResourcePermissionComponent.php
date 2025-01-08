@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace App\Admin\Panel\Resources\Role\PermissionForms\Admin;
 
 use App\Admin\Services\PanelService;
+use App\Foundation\Contracts\HasPermission;
+use App\Foundation\Models\Role;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Model;
-use ReflectionClass;
 use ReflectionException;
 
-class ResourceComponent
+class ResourcePermissionComponent
 {
-    public const DEFINED_PERMISSIONS_METHOD = 'definedPermissions';
-
     public function __construct(protected PanelService $panelService) {}
 
     public function getPermissions(): array
@@ -26,8 +25,7 @@ class ResourceComponent
         $permissions = [];
         foreach ($resources as $resource) {
             try {
-                $reflector = new ReflectionClass($resource);
-                if ($reflector->getMethod(self::DEFINED_PERMISSIONS_METHOD)->isStatic()) {
+                if (in_array(HasPermission::class, class_implements($resource))) {
                     $permissions[$resource] = $resource::definedPermissions();
                 }
             } catch (ReflectionException) {
@@ -69,6 +67,7 @@ class ResourceComponent
     {
         return CheckboxList::make('permissions.'.$resource)
             ->hiddenLabel()
+            ->options($permissions)
             ->afterStateHydrated(fn (
                 Component $component,
                 ?Model $record
@@ -80,11 +79,10 @@ class ResourceComponent
                 'lg' => 4,
                 'xl' => 6,
             ])
-            ->gridDirection('row')
-            ->options($permissions);
+            ->gridDirection('row');
     }
 
-    public function checkboxListAfterStateHydrated(Component $component, ?Model $record, array $permissions): void
+    public function checkboxListAfterStateHydrated(Component $component, ?Role $record, array $permissions): void
     {
         if (! $record) {
             return;

@@ -27,9 +27,7 @@ class EditRole extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        $permissions = $data['permissions'] ?? [];
-
-        $this->permissions = collect($permissions)
+        $this->permissions = collect($data['permissions'] ?? [])
             ->values()
             ->flatten()
             ->unique();

@@ -7,6 +7,7 @@ return [
         'name' => [
             'super-admin' => '超级管理员',
             'admin' => '管理员',
+            'vip' => '会员',
         ],
         'guard_name' => [
             'admin' => '后台',

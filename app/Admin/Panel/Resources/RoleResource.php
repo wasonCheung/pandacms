@@ -9,13 +9,13 @@ use App\Admin\Panel\Resources\Role\Pages\EditRole;
 use App\Admin\Panel\Resources\Role\Pages\ListRoles;
 use App\Admin\Panel\Resources\Role\RoleForm;
 use App\Admin\Panel\Resources\Role\RoleTable;
-use App\Foundation\Contracts\HasPermissions;
+use App\Foundation\Contracts\HasPermission;
 use App\Foundation\Models\Role;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 
-class RoleResource extends Resource implements HasPermissions
+class RoleResource extends Resource implements HasPermission
 {
     protected static ?string $model = Role::class;
 
