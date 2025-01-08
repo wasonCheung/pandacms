@@ -46,13 +46,13 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('123456'),
         ]);
 
-        User::whereName('pandacms')->firstOrFail()->assignRole(Role::getSuperAdmin());
+        User::whereName('pandacms')->firstOrFail()->assignRole(Role::getSuperAdminRole());
 
         User::factory()->create([
             'name' => 'admin',
             'password' => Hash::make('123456'),
         ]);
 
-        User::whereName('admin')->firstOrFail()->assignRole(Role::getAdmin());
+        User::whereName('admin')->firstOrFail()->assignRole(Role::getAdminRole());
     }
 }
