@@ -26,7 +26,6 @@ class AdminForm
     {
         return Tabs::make()
             ->columnSpan('full')
-            ->contained()
             ->tabs($this->componets);
     }
 

@@ -13,6 +13,7 @@ use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use ReflectionException;
 
 class ResourcePermissionComponent
@@ -44,45 +45,49 @@ class ResourcePermissionComponent
     public function getComponent(): Tab
     {
         $list = $this->getPermissions();
-        $count = 0;
         foreach ($list as $resource => $permissions) {
-            $count = count($permissions) + $count;
-            $shcema[] = $this->buildFieldset($resource, $permissions);
+            $shcema[] = $this->fieldset($resource, $permissions);
         }
 
         return Tab::make((string) __class(__CLASS__))
-            ->badge($count)
-            ->schema($shcema ?? []);
+            ->schema($shcema ?? [])
+            ->columns([
+                'xs' => 1,
+                'sm' => 2,
+                'md' => 4,
+                'lg' => 8,
+            ])
+            ->afterStateHydrated(fn (Tab $component) => $this->resetTabBadge($component))
+            ->afterStateUpdated(fn (Tab $component) => $this->resetTabBadge($component));
     }
 
-    protected function buildFieldset(Resource|string $resource, array $permissions): Fieldset
+    protected function fieldset(Resource|string $resource, array $permissions): Fieldset
     {
         return Fieldset::make($resource::getModelLabel())
+            ->columnSpan([
+                'xs' => 1,
+                'sm' => 1,
+            ])
+            ->columns(1)
             ->schema([
-                $this->buildCheckboxList($resource, $permissions),
+                $this->checkboxList($resource, $permissions),
             ]);
     }
 
-    protected function buildCheckboxList(Resource|string $resource, array $permissions): CheckboxList
+    protected function checkboxList(Resource|string $resource, array $permissions): CheckboxList
     {
         return CheckboxList::make('permissions.'.$resource)
+            ->live()
             ->hiddenLabel()
             ->options($permissions)
             ->afterStateHydrated(fn (
                 Component $component,
                 ?Model $record
             ) => $this->checkboxListAfterStateHydrated($component, $record, $permissions))
-            ->bulkToggleable()
-            ->columns([
-                'sm' => 2,
-                'md' => 3,
-                'lg' => 4,
-                'xl' => 6,
-            ])
-            ->gridDirection('row');
+            ->bulkToggleable();
     }
 
-    public function checkboxListAfterStateHydrated(Component $component, ?Role $record, array $permissions): void
+    protected function checkboxListAfterStateHydrated(Component $component, ?Role $record, array $permissions): void
     {
         if (! $record) {
             return;
@@ -94,5 +99,39 @@ class ResourcePermissionComponent
             ->keys()
             ->toArray();
         $component->state($has);
+    }
+
+    protected function resetTabBadge(Tab $component): void
+    {
+        $selected = $this->getCheckboxSelectedPermissions($component);
+        $all = $this->getCheckboxOptionsPermissions($component);
+        if ($selected->count() === 0) {
+            return;
+        }
+        $component->badge("{$selected->count()}/{$all->count()}");
+    }
+
+    protected function getCheckboxOptionsPermissions(Tab $component): Collection
+    {
+        $result = collect();
+        collect($component->getContainer()->getFlatComponents())->each(function (Component $component) use ($result) {
+            if ($component instanceof CheckboxList) {
+                $result->push(...$component->getOptions());
+            }
+        });
+
+        return $result;
+    }
+
+    protected function getCheckboxSelectedPermissions(Tab $component): Collection
+    {
+        $result = collect();
+        collect($component->getContainer()->getFlatComponents())->each(function (Component $component) use ($result) {
+            if ($component instanceof CheckboxList) {
+                $result->push(...$component->getState());
+            }
+        });
+
+        return $result;
     }
 }
