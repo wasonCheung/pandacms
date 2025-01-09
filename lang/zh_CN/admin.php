@@ -22,7 +22,7 @@ return [
             'view' => '详情',
             'create' => '创建',
             'edit' => '编辑',
-            'delete' => '删除ddddd',
+            'delete' => '删除',
         ],
     ],
     UserResource::class => [

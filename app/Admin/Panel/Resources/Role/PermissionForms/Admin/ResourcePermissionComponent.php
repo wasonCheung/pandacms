@@ -52,7 +52,6 @@ class ResourcePermissionComponent
         return Tab::make((string) __class(__CLASS__))
             ->schema($shcema ?? [])
             ->columns([
-                'xs' => 1,
                 'sm' => 2,
                 'md' => 4,
                 'lg' => 8,
@@ -65,8 +64,8 @@ class ResourcePermissionComponent
     {
         return Fieldset::make($resource::getModelLabel())
             ->columnSpan([
-                'xs' => 1,
                 'sm' => 1,
+                'md' => 2,
             ])
             ->columns(1)
             ->schema([

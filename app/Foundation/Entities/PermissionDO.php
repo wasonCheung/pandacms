@@ -6,21 +6,54 @@ namespace App\Foundation\Entities;
 
 use App\Foundation\Enums\DefaultGuard;
 
-readonly class PermissionDO
+class PermissionDO
 {
-    public DefaultGuard $guard;
+    private string $category;
 
-    public string $category;
+    private string $group;
 
-    public string $group;
+    private array $permissions;
 
-    public array $permissions;
+    public function __construct(public DefaultGuard $guard) {}
 
-    public function __construct(DefaultGuard $guard, string $category, string $group, array $permissions)
+    public static function make(DefaultGuard $guard): PermissionDO
     {
-        $this->guard = $guard;
-        $this->category = $category;
-        $this->group = $group;
+        return new self($guard);
+    }
+
+    public function permissions(array $permissions): self
+    {
         $this->permissions = $permissions;
+
+        return $this;
+    }
+
+    public function category(string $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function group(string $group): self
+    {
+        $this->group = $group;
+
+        return $this;
+    }
+
+    public function getGroup(): string
+    {
+        return $this->group;
+    }
+
+    public function getPermissions(): array
+    {
+        return $this->permissions;
+    }
+
+    public function getCategory(): string
+    {
+        return $this->category;
     }
 }
