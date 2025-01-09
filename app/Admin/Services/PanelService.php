@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Admin\Services;
 
+use App\Admin\Middlewares\PoliciesRegistry;
 use App\Admin\Panel\Pages\LoginPage;
 use App\Foundation\Enums\DefaultGuard;
 use Filament\Http\Middleware\Authenticate;
@@ -84,6 +85,7 @@ class PanelService
             SubstituteBindings::class,
             DisableBladeIconComponents::class,
             DispatchServingFilamentEvent::class,
+            PoliciesRegistry::class,
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Admin\Middlewares\PoliciesRegistry;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -32,6 +33,7 @@ return [
         ],
         'auth_middlewares' => [
             Authenticate::class,
+            PoliciesRegistry::class,
         ],
     ],
 ];
