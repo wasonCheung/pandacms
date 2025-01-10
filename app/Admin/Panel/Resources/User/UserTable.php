@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Admin\Panel\Resources\User;
 
-use App\Admin\Panel\ResourceTable;
+use App\Admin\Panel\Resources\ResourceTable;
 use Filament\Tables\Columns\TextColumn;
 
 class UserTable extends ResourceTable

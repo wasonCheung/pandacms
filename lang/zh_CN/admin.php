@@ -53,4 +53,10 @@ return [
         'guard_name' => '所属守卫',
         'permissions_count' => '关联权限',
     ],
+    'permissions' => [
+        'resources' => [
+            'label' => '资源',
+            'role',
+        ],
+    ],
 ];

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Foundation\Services;
 
-use App\Foundation\Entities\TransDO;
+use App\Foundation\Entities\TranslationDO;
 use UnitEnum;
 
 class TransClassService
@@ -19,18 +19,18 @@ class TransClassService
 
     private array $cachedKeys = [];
 
-    public function trans(string $class, ?string $key = null): TransDO
+    public function trans(string $class, ?string $key = null): TranslationDO
     {
         $classKey = $this->parseKey($class);
 
-        return TransDO::make($key ? "$classKey.$key" : $classKey);
+        return TranslationDO::make($key ? "$classKey.$key" : $classKey);
     }
 
-    public function transEnum(string|UnitEnum $enum): TransDO
+    public function transEnum(string|UnitEnum $enum): TranslationDO
     {
-        $do = TransDO::make($this->parseEnumKey($enum));
+        $do = TranslationDO::make($this->parseEnumKey($enum));
         if ($enum instanceof UnitEnum) {
-            return $do->notFound($enum->name);
+            return $do->fallback($enum->name);
         }
 
         return $do;

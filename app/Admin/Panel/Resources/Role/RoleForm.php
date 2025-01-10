@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Admin\Panel\Resources\Role;
 
-use App\Admin\Panel\ResourceForm;
+use App\Admin\Panel\Resources\ResourceForm;
 use App\Admin\Panel\Resources\Role\PermissionForms\AdminForm;
 use App\Foundation\Enums\DefaultGuard;
 use App\Foundation\Models\Role;

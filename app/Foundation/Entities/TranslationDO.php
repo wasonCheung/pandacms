@@ -5,39 +5,26 @@ declare(strict_types=1);
 namespace App\Foundation\Entities;
 
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Lang;
 use InvalidArgumentException;
 use Stringable;
 
-class TransDO implements Htmlable, Stringable
+class TranslationDO implements Htmlable, Stringable
 {
     private ?string $locale = null;
 
     private string $key;
 
-    private string $notFound = '';
-
     private array $replacements = [];
 
-    private bool $fallback = false;
+    private mixed $fallback = false;
 
-    public function fallback(bool $fallback = true): self
+    public function fallback(string|callable|false $fallback): self
     {
         $this->fallback = $fallback;
 
         return $this;
-    }
-
-    public function notFound(string $notFound): self
-    {
-        $this->notFound = $notFound;
-
-        return $this;
-    }
-
-    public function getNotFound(): string
-    {
-        return $this->notFound;
     }
 
     public function replacements(array $replacements): self
@@ -64,7 +51,7 @@ class TransDO implements Htmlable, Stringable
         return $this->locale;
     }
 
-    public function isFallback(): bool
+    public function getFallback(): false|string|callable
     {
         return $this->fallback;
     }
@@ -85,7 +72,13 @@ class TransDO implements Htmlable, Stringable
             return Lang::get($this->getKey(), $this->getReplacements(), $this->getLocale());
         }
 
-        return $this->isFallback() ? $this->getNotFound() : $this->getKey();
+        $call = $this->getFallback();
+
+        if ($call === false) {
+            return $this->getKey();
+        }
+
+        return is_callable($call) ? $call($this) : $call;
     }
 
     public function __construct(string $key)
@@ -96,6 +89,16 @@ class TransDO implements Htmlable, Stringable
     public static function make(string $key): self
     {
         return new self($key);
+    }
+
+    public static function makeList(string $prefix, array $list): Collection
+    {
+        $result = [];
+        foreach ($list as $key) {
+            $result[$key] = self::make($prefix.'.'.$key);
+        }
+
+        return collect($result);
     }
 
     public function toHtml(): string

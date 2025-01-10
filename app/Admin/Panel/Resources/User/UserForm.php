@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Admin\Panel\Resources\User;
 
-use App\Admin\Panel\ResourceForm;
+use App\Admin\Panel\Resources\ResourceForm;
 use Filament\Forms\Form;
 
 class UserForm extends ResourceForm

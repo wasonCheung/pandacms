@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Admin\Panel\Resources\Role\PermissionForms\Admin;
 
 use App\Admin\Services\PanelService;
-use App\Foundation\Contracts\HasPermission;
+use App\Foundation\Contracts\HasPermissions;
 use App\Foundation\Models\Role;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Component;
@@ -26,7 +26,7 @@ class ResourcePermissionComponent
         $permissions = [];
         foreach ($resources as $resource) {
             try {
-                if (in_array(HasPermission::class, class_implements($resource))) {
+                if (in_array(HasPermissions::class, class_implements($resource))) {
                     $permissions[$resource] = $resource::definedPermissions();
                 }
             } catch (ReflectionException) {

@@ -6,6 +6,7 @@ namespace App\Admin;
 
 use App\Admin\Exceptions\ComponentExceptionHook;
 use App\Admin\Services\PanelService;
+use App\Foundation\Services\PermissionService;
 use Filament\Facades\Filament;
 use Filament\Panel;
 use Illuminate\Support\ServiceProvider;
@@ -32,5 +33,19 @@ class AdminServiceProvider extends ServiceProvider
     private function registerLivewireHooks(): void
     {
         ComponentHookRegistry::register(ComponentExceptionHook::class);
+    }
+
+    public function boot(): void
+    {
+        $this->bootPermissions();
+    }
+
+    public function bootPermissions(): void
+    {
+        $this->app->afterResolving(PermissionService::class, function (PermissionService $permissionService) {
+            $permissionService->register(function (PanelService $panelService) {
+                return $panelService->panel->getResources();
+            });
+        });
     }
 }

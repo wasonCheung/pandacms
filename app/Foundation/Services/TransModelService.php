@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Foundation\Services;
 
-use App\Foundation\Entities\TransDO;
+use App\Foundation\Entities\TranslationDO;
 use Illuminate\Database\Eloquent\Model;
 
 class TransModelService
@@ -13,7 +13,7 @@ class TransModelService
 
     private array $cachedKeys = [];
 
-    public function trans(string|Model $model, string $column, ?string $value = null): TransDO
+    public function trans(string|Model $model, string $column, ?string $value = null): TranslationDO
     {
 
         $class = $model instanceof Model ? $model::class : $model;
@@ -23,11 +23,11 @@ class TransModelService
         $key = $this->parseKey($class).".$column";
 
         if ($value) {
-            return TransDO::make($key.'.'.$value)
-                ->notFound($value);
+            return TranslationDO::make($key.'.'.$value)
+                ->fallback($value);
         }
 
-        return TransDO::make($key);
+        return TranslationDO::make($key);
     }
 
     public function parseKey(string $model): string

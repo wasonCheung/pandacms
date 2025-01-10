@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Admin\Panel;
+namespace App\Admin\Panel\Resources;
 
 use Filament\Tables\Table;
 

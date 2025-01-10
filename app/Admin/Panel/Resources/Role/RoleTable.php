@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Admin\Panel\Resources\Role;
 
-use App\Admin\Panel\ResourceTable;
+use App\Admin\Panel\Resources\ResourceTable;
 use App\Foundation\Enums\DefaultGuard;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\Column;
@@ -53,14 +53,14 @@ class RoleTable extends ResourceTable
             })
             ->badge()
             ->state(fn ($record,
-            ) => __model($record, 'guard_name')->fallback())
+            ) => __model($record, 'guard_name'))
             ->label(__class(__CLASS__, 'guard_name'));
     }
 
     public function nameColumn(): Column
     {
         return TextColumn::make('name')
-            ->state(fn ($record) => __model($record, 'name')->fallback())
+            ->state(fn ($record) => __model($record, 'name'))
             ->label(__class(__CLASS__, 'name'));
     }
 }
