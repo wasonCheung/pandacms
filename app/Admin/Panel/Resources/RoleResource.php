@@ -17,6 +17,24 @@ use Filament\Tables\Table;
 
 class RoleResource extends Resource
 {
+    public const PERMISSION_VIEW_ANY = 'resource_role_view_any';
+
+    public const PERMISSION_VIEW = 'resource_role_view';
+
+    public const PERMISSION_CREATE = 'resource_role_create';
+
+    public const PERMISSION_UPDATE = 'resource_role_update';
+
+    public const PERMISSION_DELETE = 'resource_role_delete';
+
+    public const ALL_PERMISSIONS = [
+        self::PERMISSION_VIEW_ANY,
+        self::PERMISSION_VIEW,
+        self::PERMISSION_CREATE,
+        self::PERMISSION_UPDATE,
+        self::PERMISSION_DELETE,
+    ];
+
     protected static ?string $model = Role::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-shield-check';
@@ -48,12 +66,6 @@ class RoleResource extends Resource
     public static function definedPermissions(): PermissionDO
     {
         return parent::definedPermissions()
-            ->permissions([
-                'resource_role_view_any',
-                'resource_role_view',
-                'resource_role_create',
-                'resource_role_edit',
-                'resource_role_delete',
-            ]);
+            ->permissions(self::ALL_PERMISSIONS);
     }
 }

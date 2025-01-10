@@ -17,21 +17,21 @@ return [
     RoleResource::class => [
         'model_label' => '角色',
         'permissions' => [
-            'resource_role_view_any' => '查看所有',
-            'resource_role_view' => '查看',
-            'resource_role_create' => '创建',
-            'resource_role_edit' => '编辑',
-            'resource_role_delete' => '删除',
+            RoleResource::PERMISSION_VIEW_ANY => '列表',
+            RoleResource::PERMISSION_VIEW => '详情',
+            RoleResource::PERMISSION_CREATE => '新建',
+            RoleResource::PERMISSION_UPDATE => '更新',
+            RoleResource::PERMISSION_DELETE => '删除',
         ],
     ],
     UserResource::class => [
         'model_label' => '用户',
         'permissions' => [
-            'resource_user_view_any' => '查看所有',
-            'resource_user_view' => '查看',
-            'resource_user_create' => '创建',
-            'resource_user_edit' => '编辑',
-            'resource_user_delete' => '删除',
+            UserResource::PERMISSION_VIEW_ANY => '列表',
+            UserResource::PERMISSION_VIEW => '详情',
+            UserResource::PERMISSION_CREATE => '新建',
+            UserResource::PERMISSION_UPDATE => '更新',
+            UserResource::PERMISSION_DELETE => '删除',
         ],
     ],
     RoleForm::class => [

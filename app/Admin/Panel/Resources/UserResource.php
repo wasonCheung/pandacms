@@ -17,6 +17,24 @@ use Filament\Tables\Table;
 
 class UserResource extends Resource
 {
+    public const PERMISSION_VIEW_ANY = 'resource_user_view_any';
+
+    public const PERMISSION_VIEW = 'resource_user_view';
+
+    public const PERMISSION_CREATE = 'resource_user_create';
+
+    public const PERMISSION_UPDATE = 'resource_user_edit';
+
+    public const PERMISSION_DELETE = 'resource_user_delete';
+
+    public const ALL_PERMISSIONS = [
+        self::PERMISSION_VIEW_ANY,
+        self::PERMISSION_VIEW,
+        self::PERMISSION_CREATE,
+        self::PERMISSION_UPDATE,
+        self::PERMISSION_DELETE,
+    ];
+
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user';
@@ -48,12 +66,6 @@ class UserResource extends Resource
     public static function definedPermissions(): PermissionDO
     {
         return parent::definedPermissions()
-            ->permissions([
-                'resource_user_view_any',
-                'resource_user_view',
-                'resource_user_create',
-                'resource_user_edit',
-                'resource_user_delete',
-            ]);
+            ->permissions(self::ALL_PERMISSIONS);
     }
 }
