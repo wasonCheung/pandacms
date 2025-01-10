@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Admin\Panel\Resources;
 
+use App\Admin\Panel\Contracts\Resource;
 use App\Admin\Panel\Resources\User\Pages\CreateUser;
 use App\Admin\Panel\Resources\User\Pages\EditUser;
 use App\Admin\Panel\Resources\User\Pages\ListUsers;
 use App\Admin\Panel\Resources\User\UserForm;
 use App\Admin\Panel\Resources\User\UserTable;
-use App\Foundation\Entities\PermissionBO;
+use App\Foundation\Entities\PermissionDO;
 use App\Foundation\Models\User;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
@@ -44,7 +45,7 @@ class UserResource extends Resource
         return (string) __class(__CLASS__.'.model_label');
     }
 
-    public static function definedPermissions(): PermissionBO
+    public static function definedPermissions(): PermissionDO
     {
         return parent::definedPermissions()
             ->permissions([

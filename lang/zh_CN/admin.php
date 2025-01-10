@@ -2,37 +2,36 @@
 
 declare(strict_types=1);
 
+use App\Admin\Panel\Contracts\Resource;
 use App\Admin\Panel\Exceptions\LoginInvalidException;
 use App\Admin\Panel\Exceptions\LoginLimitException;
 use App\Admin\Panel\Pages\LoginPage;
-use App\Admin\Panel\Resources\Role\PermissionForms\Admin\ResourcePermissionComponent;
 use App\Admin\Panel\Resources\Role\RoleForm;
 use App\Admin\Panel\Resources\Role\RoleTable;
 use App\Admin\Panel\Resources\RoleResource;
 use App\Admin\Panel\Resources\UserResource;
 
 return [
-    ResourcePermissionComponent::class => '资源',
     LoginInvalidException::class => '用户名或密码错误',
     LoginLimitException::class => '登录次数过多，请 :seconds 秒后再试。',
     RoleResource::class => [
         'model_label' => '角色',
         'permissions' => [
-            'view_any' => '列表',
-            'view' => '详情',
-            'create' => '创建',
-            'edit' => '编辑',
-            'delete' => '删除',
+            'resource_role_view_any' => '查看所有',
+            'resource_role_view' => '查看',
+            'resource_role_create' => '创建',
+            'resource_role_edit' => '编辑',
+            'resource_role_delete' => '删除',
         ],
     ],
     UserResource::class => [
         'model_label' => '用户',
         'permissions' => [
-            'view_any' => '列表',
-            'view' => '详情',
-            'create' => '创建',
-            'edit' => '编辑',
-            'delete' => '删除',
+            'resource_user_view_any' => '查看所有',
+            'resource_user_view' => '查看',
+            'resource_user_create' => '创建',
+            'resource_user_edit' => '编辑',
+            'resource_user_delete' => '删除',
         ],
     ],
     RoleForm::class => [
@@ -53,10 +52,5 @@ return [
         'guard_name' => '所属守卫',
         'permissions_count' => '关联权限',
     ],
-    'permissions' => [
-        'resources' => [
-            'label' => '资源',
-            'role',
-        ],
-    ],
+    Resource::class => '资源',
 ];

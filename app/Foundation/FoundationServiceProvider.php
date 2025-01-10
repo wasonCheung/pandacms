@@ -8,7 +8,7 @@ use App\Foundation\Entities\TranslationDO;
 use App\Foundation\Services\PermissionService;
 use App\Foundation\Services\TransClassService;
 use App\Foundation\Services\TransModelService;
-use App\Foundation\Entities\PermissionBO;
+use App\Foundation\Entities\PermissionDO;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\ServiceProvider;
@@ -27,14 +27,6 @@ class FoundationServiceProvider extends ServiceProvider
         $this->bootMarcos();
     }
 
-    private function bootMarcos(): void
-    {
-        Builder::macro('getTranslation',
-            function (string $column): TranslationDO {
-                return __model($this->getModel(), $column);
-            });
-    }
-
     private function bootFactoryHandlers(): void
     {
         if ($this->app->runningInConsole() === false) {
@@ -46,5 +38,13 @@ class FoundationServiceProvider extends ServiceProvider
         Factory::guessModelNamesUsing(function (Factory $factory) {
             return 'App\\Foundation\\Models\\'.str_replace('Factory', '', class_basename($factory));
         });
+    }
+
+    private function bootMarcos(): void
+    {
+        Builder::macro('getTranslation',
+            function (string $column): TranslationDO {
+                return __model($this->getModel(), $column);
+            });
     }
 }

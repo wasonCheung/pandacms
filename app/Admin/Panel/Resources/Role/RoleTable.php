@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Admin\Panel\Resources\Role;
 
-use App\Admin\Panel\Resources\ResourceTable;
+use App\Admin\Panel\Contracts\ResourceTable;
 use App\Foundation\Enums\DefaultGuard;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\Column;

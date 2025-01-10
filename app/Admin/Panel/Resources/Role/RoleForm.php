@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Admin\Panel\Resources\Role;
 
-use App\Admin\Panel\Resources\ResourceForm;
-use App\Admin\Panel\Resources\Role\PermissionForms\AdminForm;
+use App\Admin\Panel\Contracts\ResourceForm;
+use App\Admin\Panel\Services\PermissionsFormService;
 use App\Foundation\Enums\DefaultGuard;
 use App\Foundation\Models\Role;
 use Filament\Forms\Components\Component;
@@ -14,20 +14,35 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Forms\Get;
 
 class RoleForm extends ResourceForm
 {
-    public const PERMISSIONS_FORM = [
-        DefaultGuard::Admin->value => AdminForm::class,
-    ];
+    public function buildEditForm(): Form
+    {
+        return $this->form->schema([
+            Section::make()
+                ->schema([
+                    $this->nameField()
+                        ->disabled(fn (Role $record) => $record->isDefaultRole()),
+                    $this->guardNameField()
+                        ->disabled(fn (Role $record) => $record->isDefaultRole()),
+                ])->columns([
+                    'sm' => 2,
+                    'lg' => 3,
+                ]),
+            Grid::make()
+                ->hidden(fn (Role $record) => $record->isSuperAdminRole())
+                ->schema($this->permissionsField()),
+        ])
+            ->disabled(fn (Role $record) => $record->isSuperAdminRole());
+    }
 
     public function nameField(): Component
     {
         return TextInput::make('name')
             ->hintIcon('heroicon-o-language')
             ->hintIconTooltip(function ($state) {
-                return __model(Role::class, 'name', $state ?: 'xxx')->getTranslation();
+                return __model(Role::class, 'name', $state ?: 'xxx')->fallback(false);
             })
             ->required()
             ->label(__class(__CLASS__, 'name'))
@@ -59,40 +74,7 @@ class RoleForm extends ResourceForm
 
     public function permissionsField(): array
     {
-        return collect(static::PERMISSIONS_FORM)
-            ->map(function ($componentClass,$componentGuard) {
-                return app($componentClass)
-                    ->getComponent()
-                    ->hidden(function (Get $get) use ($componentGuard) {
-                        $guard = $get('guard_name');
-                        if ($guard && $guard === $componentGuard) {
-                            return false;
-                        }
-
-                        return true;
-                    });
-            })
-            ->toArray();
-    }
-
-    public function buildEditForm(): Form
-    {
-        return $this->form->schema([
-            Section::make()
-                ->schema([
-                    $this->nameField()
-                        ->disabled(fn (Role $record) => $record->isDefaultRole()),
-                    $this->guardNameField()
-                        ->disabled(fn (Role $record) => $record->isDefaultRole()),
-                ])->columns([
-                    'sm' => 2,
-                    'lg' => 3,
-                ]),
-            Grid::make()
-                ->hidden(fn (Role $record) => $record->isSuperAdminRole())
-                ->schema($this->permissionsField()),
-        ])
-            ->disabled(fn (Role $record) => $record->isSuperAdminRole());
+        return app(PermissionsFormService::class)->getComponents();
     }
 
     public function buildCreateForm(): Form

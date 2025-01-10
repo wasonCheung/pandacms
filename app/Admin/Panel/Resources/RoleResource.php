@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Admin\Panel\Resources;
 
+use App\Admin\Panel\Contracts\Resource;
 use App\Admin\Panel\Resources\Role\Pages\CreateRole;
 use App\Admin\Panel\Resources\Role\Pages\EditRole;
 use App\Admin\Panel\Resources\Role\Pages\ListRoles;
 use App\Admin\Panel\Resources\Role\RoleForm;
 use App\Admin\Panel\Resources\Role\RoleTable;
-use App\Foundation\Entities\PermissionBO;
+use App\Foundation\Entities\PermissionDO;
 use App\Foundation\Models\Role;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
@@ -44,7 +45,7 @@ class RoleResource extends Resource
         ];
     }
 
-    public static function definedPermissions(): PermissionBO
+    public static function definedPermissions(): PermissionDO
     {
         return parent::definedPermissions()
             ->permissions([

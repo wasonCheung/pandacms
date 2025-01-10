@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Admin\Panel\Resources;
+namespace App\Admin\Panel\Contracts;
 
 use Filament\Forms\Form;
 

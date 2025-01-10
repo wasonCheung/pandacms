@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace App\Foundation\Services;
 
 use App\Foundation\Contracts\HasPermissions;
-use App\Foundation\Entities\PermissionBO;
+use App\Foundation\Entities\PermissionDO;
+use App\Foundation\Enums\DefaultGuard;
 use Illuminate\Support\Collection;
 
 readonly class PermissionService
 {
-    public Collection $permissions;
+    /**
+     * @var Collection|PermissionDO[]
+     */
+    public Collection|array $permissions;
 
     public function __construct()
     {
@@ -25,13 +29,21 @@ readonly class PermissionService
     {
         if (is_callable($class)) {
             $result = app()->call($class);
-            if ($result instanceof PermissionBO) {
+            if ($result instanceof PermissionDO) {
                 $this->addPermission($result);
 
                 return $this;
             }
         }
         $this->parseInterface($result ?? $class);
+
+        return $this;
+    }
+
+    public function addPermission(PermissionDO $permission): self
+    {
+        $this->permissions->push($permission);
+
         return $this;
     }
 
@@ -42,12 +54,5 @@ readonly class PermissionService
                 $this->addPermission($item::definedPermissions());
             }
         }
-    }
-
-    public function addPermission(PermissionBO $permission): self
-    {
-        $this->permissions->push($permission);
-
-        return $this;
     }
 }
