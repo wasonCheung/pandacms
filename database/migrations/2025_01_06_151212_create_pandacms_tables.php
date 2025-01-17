@@ -19,7 +19,6 @@ return new class extends Migration
 
             // new columns
             $table->string('display_name')->nullable();
-            $table->string('avatar')->nullable();
             $table->softDeletes();
         });
 
@@ -33,7 +32,6 @@ return new class extends Migration
             $table->string('email')->nullable(false)->change();
             // down new columns
             $table->dropColumn('display_name');
-            $table->dropColumn('avatar');
             $table->dropSoftDeletes();
         });
     }

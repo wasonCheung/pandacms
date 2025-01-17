@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Foundation\Models;
 
 use App\Admin\Services\PanelService;
+use App\Foundation\Services\AvatarService;
 use App\Foundation\Services\UserService;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
@@ -38,7 +39,12 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
 
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->avatar;
+        return $this->getAvatar();
+    }
+
+    public function getAvatar(): string
+    {
+        return app(AvatarService::class)->getUrl($this);
     }
 
     public function canAccessPanel(Panel $panel): bool

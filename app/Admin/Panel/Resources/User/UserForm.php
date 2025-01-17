@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Admin\Panel\Resources\User;
 
 use App\Admin\Panel\Contracts\ResourceForm;
-use App\Foundation\Models\User;
 use App\Foundation\Services\AvatarService;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
@@ -56,15 +55,9 @@ class UserForm extends ResourceForm
             ->avatar()
             ->acceptedFileTypes(['image/jpeg', 'image/png'])
             ->preserveFilenames(false)
-            ->getUploadedFileNameForStorageUsing(fn (
-                $record
-            ) => $this->avatarService->getFileName($record))
+            ->getUploadedFileNameForStorageUsing(fn ($record) => $this->avatarService->storageName($record))
             ->disk($this->avatarService->getStorageDisk())
-            ->directory($this->avatarService->getStorageDirectory())
-            ->saveUploadedFileUsing(function (User $record) {
-                $record->avatar = $this->avatarService->getUrl($record);
-                $record->save();
-            });
+            ->directory($this->avatarService->getStorageDirectory());
     }
 
     public function name(): TextInput
