@@ -2,17 +2,14 @@
 
 declare(strict_types=1);
 
+use App\Foundation\Enums\DefaultRole;
+
 return [
     'role' => [
         'name' => [
-            'super-admin' => '超级管理员',
-            'admin' => '管理员',
-            'vip' => '会员',
-        ],
-        'guard_name' => [
-            'admin' => '后台',
-            'portal' => '前台',
-            'api' => '接口',
+            DefaultRole::Admin->value => '管理员',
+            DefaultRole::SuperAdmin->value => '超级管理员',
+            DefaultRole::Member->value => '会员',
         ],
     ],
 ];

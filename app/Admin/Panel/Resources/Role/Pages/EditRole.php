@@ -7,6 +7,7 @@ namespace App\Admin\Panel\Resources\Role\Pages;
 use App\Admin\Panel\Resources\RoleResource;
 use App\Foundation\Models\Permission;
 use App\Foundation\Models\Role;
+use App\Foundation\Services\RoleService;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Collection;
@@ -21,7 +22,7 @@ class EditRole extends EditRecord
     {
         return [
             Actions\DeleteAction::make()
-                ->hidden(fn (Role $record) => $record->isDefaultRole()),
+                ->hidden(fn (Role $record) => app(RoleService::class)->isDefaultRole($record)),
         ];
     }
 

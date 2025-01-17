@@ -7,7 +7,7 @@ namespace App\Admin\Panel\Services;
 use App\Foundation\Entities\PermissionDO;
 use App\Foundation\Enums\DefaultGuard;
 use App\Foundation\Models\Role;
-use App\Foundation\Services\PermissionService;
+use App\Foundation\Services\PermissionRegistry;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Fieldset;
@@ -19,7 +19,7 @@ use Illuminate\Support\Collection;
 
 class PermissionsFormService
 {
-    public function __construct(protected PermissionService $service) {}
+    public function __construct(protected PermissionRegistry $service) {}
 
     /**
      * @return Tabs[]

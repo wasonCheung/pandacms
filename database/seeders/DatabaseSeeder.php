@@ -8,6 +8,7 @@ use App\Foundation\Enums\DefaultGuard;
 use App\Foundation\Enums\DefaultRole;
 use App\Foundation\Models\Role;
 use App\Foundation\Models\User;
+use App\Foundation\Services\RoleService;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -20,8 +21,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->clearPermisssionCache();
-        $this->createAdminDefaultRoles();
+        $this->createDefaultRoles();
         $this->createAdminUsers();
+        User::factory(50)->create();
     }
 
     private function clearPermisssionCache(): void
@@ -29,12 +31,19 @@ class DatabaseSeeder extends Seeder
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
     }
 
-    private function createAdminDefaultRoles(): void
+    private function createDefaultRoles(): void
     {
         foreach (DefaultRole::admin() as $role) {
             Role::create([
                 'name' => $role->value,
                 'guard_name' => DefaultGuard::Admin,
+            ]);
+        }
+
+        foreach (DefaultRole::portal() as $role) {
+            Role::create([
+                'name' => $role->value,
+                'guard_name' => DefaultGuard::Portal,
             ]);
         }
     }
@@ -46,13 +55,13 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('123456'),
         ]);
 
-        User::whereName('pandacms')->firstOrFail()->assignRole(Role::getSuperAdminRole());
+        User::whereName('pandacms')->firstOrFail()->assignRole(app(RoleService::class)->getSuperAdmin());
 
         User::factory()->create([
             'name' => 'admin',
             'password' => Hash::make('123456'),
         ]);
 
-        User::whereName('admin')->firstOrFail()->assignRole(Role::getAdminRole());
+        User::whereName('admin')->firstOrFail()->assignRole(app(RoleService::class)->getAdmin());
     }
 }

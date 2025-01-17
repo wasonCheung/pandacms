@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Foundation;
 
 use App\Foundation\Entities\TranslationDO;
-use App\Foundation\Services\PermissionService;
-use App\Foundation\Services\TransClassService;
-use App\Foundation\Services\TransModelService;
-use App\Foundation\Entities\PermissionDO;
+use App\Foundation\Services\AvatarService;
+use App\Foundation\Services\ClassTranslator;
+use App\Foundation\Services\ModelTranslator;
+use App\Foundation\Services\PermissionRegistry;
+use App\Foundation\Services\RoleService;
+use App\Foundation\Services\UserService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\ServiceProvider;
@@ -16,9 +18,12 @@ use Illuminate\Support\ServiceProvider;
 class FoundationServiceProvider extends ServiceProvider
 {
     public array $singletons = [
-        TransClassService::class,
-        TransModelService::class,
-        PermissionService::class,
+        ClassTranslator::class,
+        ModelTranslator::class,
+        PermissionRegistry::class,
+        AvatarService::class,
+        RoleService::class,
+        UserService::class,
     ];
 
     public function boot(): void

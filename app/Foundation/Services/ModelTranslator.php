@@ -7,7 +7,7 @@ namespace App\Foundation\Services;
 use App\Foundation\Entities\TranslationDO;
 use Illuminate\Database\Eloquent\Model;
 
-class TransModelService
+class ModelTranslator
 {
     public const DEFAULT_GROUP = 'models';
 

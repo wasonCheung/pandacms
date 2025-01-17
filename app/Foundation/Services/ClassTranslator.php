@@ -7,9 +7,9 @@ namespace App\Foundation\Services;
 use App\Foundation\Entities\TranslationDO;
 use UnitEnum;
 
-class TransClassService
+class ClassTranslator
 {
-    public const GROUP_MAPPINGS = [
+    private static array $mappings = [
         'admin' => 'App\\Admin',
         'portal' => 'App\\Portal',
         'foundation' => 'App\\Foundation',
@@ -59,12 +59,22 @@ class TransClassService
 
     public function parseClassGroupName(string $class): string
     {
-        foreach (self::GROUP_MAPPINGS as $group => $namespacePrefix) {
+        foreach (static::getMappings() as $group => $namespacePrefix) {
             if (str_starts_with($class, $namespacePrefix)) {
                 return $group;
             }
         }
 
         return self::DEFAULT_GROUP;
+    }
+
+    public function addMapping(string $group, string $namespacePrefix): void
+    {
+        self::$mappings[$group] = $namespacePrefix;
+    }
+
+    public static function getMappings(): array
+    {
+        return self::$mappings;
     }
 }

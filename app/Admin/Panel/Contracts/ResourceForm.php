@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Admin\Panel\Contracts;
 
+use App\Foundation\Entities\TranslationDO;
 use Filament\Forms\Form;
 
 abstract class ResourceForm
@@ -14,27 +15,38 @@ abstract class ResourceForm
 
     public function __construct(protected Form $form) {}
 
-    public function isEditForm(): bool
+    public static function getTranslation(string $key): TranslationDO
     {
-        return $this->form->getOperation() === static::OPERATION_EDIT;
+        return __class(static::class, $key);
     }
 
-    public function isCreateForm(): bool
+    public static function make(Form $form): Form
     {
-        return $this->form->getOperation() === static::OPERATION_CREATE;
+        return app(static::class, ['form' => $form])->buildForm();
     }
-
-    abstract public function buildEditForm(): Form;
-
-    abstract public function buildCreateForm(): Form;
 
     public function buildForm(): Form
     {
         return $this->isEditForm() ? $this->buildEditForm() : $this->buildCreateForm();
     }
 
-    public static function make(Form $form): Form
+    public function isEditForm(): bool
     {
-        return app(static::class, ['form' => $form])->buildForm();
+        return $this->form->getOperation() === static::OPERATION_EDIT;
+    }
+
+    public function buildEditForm(): Form
+    {
+        return $this->form;
+    }
+
+    public function buildCreateForm(): Form
+    {
+        return $this->form;
+    }
+
+    public function isCreateForm(): bool
+    {
+        return $this->form->getOperation() === static::OPERATION_CREATE;
     }
 }

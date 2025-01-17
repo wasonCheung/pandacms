@@ -27,7 +27,22 @@ class RoleTable extends ResourceTable
             ->actions([
                 EditAction::make(),
             ]);
+    }
 
+    public function nameColumn(): Column
+    {
+        return TextColumn::make('name')
+            ->state(fn ($record) => __model($record, 'name'))
+            ->label(__class(__CLASS__, 'name'));
+    }
+
+    public function guardNameColumn(): Column
+    {
+        return TextColumn::make('guard_name')
+            ->color(fn ($record) => DefaultGuard::tryFrom($record->guard_name)->getColor())
+            ->badge()
+            ->state(fn ($record) => DefaultGuard::tryFrom($record->guard_name)->getLabel())
+            ->label(__class(__CLASS__, 'guard_name'));
     }
 
     public function permissionCountColumn(): Column
@@ -42,25 +57,5 @@ class RoleTable extends ResourceTable
                 return $record->permissions->count();
             })
             ->label(__class(__CLASS__, 'permissions_count'));
-    }
-
-    public function guardNameColumn(): Column
-    {
-        return TextColumn::make('guard_name')
-            ->color(fn ($record) => match ($record->guard_name) {
-                DefaultGuard::Admin->value => 'danger',
-                DefaultGuard::Portal->value => 'success',
-            })
-            ->badge()
-            ->state(fn ($record,
-            ) => __model($record, 'guard_name'))
-            ->label(__class(__CLASS__, 'guard_name'));
-    }
-
-    public function nameColumn(): Column
-    {
-        return TextColumn::make('name')
-            ->state(fn ($record) => __model($record, 'name'))
-            ->label(__class(__CLASS__, 'name'));
     }
 }

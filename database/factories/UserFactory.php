@@ -12,10 +12,11 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->unique()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
+            'name' => $this->faker->unique()->name(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'email_verified_at' => $this->faker->dateTimeThisYear(),
             'password' => Hash::make('123456'),
+            'display_name' => $this->faker->name(),
         ];
     }
 }

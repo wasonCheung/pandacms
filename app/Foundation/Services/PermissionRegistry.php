@@ -9,7 +9,7 @@ use App\Foundation\Entities\PermissionDO;
 use App\Foundation\Enums\DefaultGuard;
 use Illuminate\Support\Collection;
 
-readonly class PermissionService
+readonly class PermissionRegistry
 {
     /**
      * @var Collection|PermissionDO[]

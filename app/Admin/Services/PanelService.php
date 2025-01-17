@@ -54,28 +54,28 @@ class PanelService
             );
     }
 
-    public function getAuthMiddlewares(): array
-    {
-        return $this->config->get('pandacms.admin.panel.auth_middlewares', [
-            Authenticate::class,
-        ]);
-    }
-
     public function getPath(): string
     {
-        return $this->config->get('pandacms.admin.panel.path', 'admin');
+        return $this->config->get('pandacms.admin.path', 'admin');
     }
 
     public function getColors(): array
     {
-        return $this->config->get('pandacms.admin.panel.colors', [
+        return $this->config->get('pandacms.admin.colors', [
             'primary' => '#4c51bf',
+        ]);
+    }
+
+    public function getAuthMiddlewares(): array
+    {
+        return $this->config->get('pandacms.admin.auth_middlewares', [
+            Authenticate::class,
         ]);
     }
 
     public function getMiddlewares(): array
     {
-        return $this->config->get('pandacms.admin.panel.middlewares', [
+        return $this->config->get('pandacms.admin.middlewares', [
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
             StartSession::class,

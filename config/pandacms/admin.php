@@ -15,25 +15,23 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 return [
-    'panel' => [
-        'path' => 'dashboard',
-        'colors' => [
-            'primary' => '#4c51bf',
-        ],
-        'middlewares' => [
-            EncryptCookies::class,
-            AddQueuedCookiesToResponse::class,
-            StartSession::class,
-            AuthenticateSession::class,
-            ShareErrorsFromSession::class,
-            VerifyCsrfToken::class,
-            SubstituteBindings::class,
-            DisableBladeIconComponents::class,
-            DispatchServingFilamentEvent::class,
-        ],
-        'auth_middlewares' => [
-            Authenticate::class,
-            PoliciesRegistry::class,
-        ],
+    'path' => 'dashboard',
+    'colors' => [
+        'primary' => '#4c51bf',
+    ],
+    'middlewares' => [
+        EncryptCookies::class,
+        AddQueuedCookiesToResponse::class,
+        StartSession::class,
+        AuthenticateSession::class,
+        ShareErrorsFromSession::class,
+        VerifyCsrfToken::class,
+        SubstituteBindings::class,
+        DisableBladeIconComponents::class,
+        DispatchServingFilamentEvent::class,
+    ],
+    'auth_middlewares' => [
+        Authenticate::class,
+        PoliciesRegistry::class,
     ],
 ];
