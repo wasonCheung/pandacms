@@ -11,7 +11,6 @@ use App\Foundation\Services\ModelTranslator;
 use App\Foundation\Services\PermissionRegistry;
 use App\Foundation\Services\RoleService;
 use App\Foundation\Services\UserService;
-use Filament\AvatarProviders\Contracts\AvatarProvider;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\ServiceProvider;
@@ -25,8 +24,17 @@ class FoundationServiceProvider extends ServiceProvider
         AvatarService::class,
         RoleService::class,
         UserService::class,
-        AvatarProvider::class,
     ];
+
+    public function register(): void
+    {
+        $this->registerAvatarDefaultProvider();
+    }
+
+    private function registerAvatarDefaultProvider(): void
+    {
+        $this->app->singleton(app(AvatarService::class)->getDefaultAvatarProvider());
+    }
 
     public function boot(): void
     {

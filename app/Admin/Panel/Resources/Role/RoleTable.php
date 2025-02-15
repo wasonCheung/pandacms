@@ -6,6 +6,7 @@ namespace App\Admin\Panel\Resources\Role;
 
 use App\Admin\Panel\Contracts\ResourceTable;
 use App\Foundation\Enums\DefaultGuard;
+use App\Foundation\Services\RoleService;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Columns\TextColumn;
@@ -13,6 +14,8 @@ use Filament\Tables\Table;
 
 class RoleTable extends ResourceTable
 {
+    public function __construct(protected RoleService $roleService) {}
+
     public function buildTable(): Table
     {
         return $this->table
@@ -50,7 +53,7 @@ class RoleTable extends ResourceTable
         return TextColumn::make('permissions_count')
             ->badge()
             ->state(function ($record) {
-                if ($record->isSuperAdminRole()) {
+                if ($this->roleService->isSuperAdmin($record)) {
                     return '*';
                 }
 

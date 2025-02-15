@@ -9,11 +9,13 @@ use Filament\Tables\Table;
 
 abstract class ResourceTable
 {
-    public function __construct(public Table $table) {}
+    protected readonly Table $table;
 
     public static function make(Table $table): Table
     {
-        return app(static::class, ['table' => $table])->buildTable();
+        return app(static::class)
+            ->table($table)
+            ->buildTable();
     }
 
     public function buildTable(): Table
@@ -66,6 +68,14 @@ abstract class ResourceTable
                 $columns[] = $this->$method();
             }
         }
+
         return $columns;
+    }
+
+    public function table(Table $table): static
+    {
+        $this->table = $table;
+
+        return $this;
     }
 }

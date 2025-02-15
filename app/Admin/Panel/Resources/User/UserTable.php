@@ -6,7 +6,7 @@ namespace App\Admin\Panel\Resources\User;
 
 use App\Admin\Panel\Contracts\ResourceTable;
 use App\Foundation\Enums\DefaultGuard;
-use Filament\AvatarProviders\UiAvatarsProvider;
+use App\Foundation\Services\AvatarService;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\Layout\Split;
@@ -16,6 +16,8 @@ use Filament\Tables\Filters\SelectFilter;
 
 class UserTable extends ResourceTable
 {
+    public function __construct(protected AvatarService $avatarService) {}
+
     public function editAction()
     {
         return EditAction::make();
@@ -25,7 +27,8 @@ class UserTable extends ResourceTable
     {
         return Split::make([
             ImageColumn::make('avatar')
-                ->defaultImageUrl(fn ($record) => app(UiAvatarsProvider::class)->get($record))
+                ->state(fn ($record) => $this->avatarService->url($record))
+                ->defaultImageUrl(fn ($record) => $this->avatarService->defaultUrl($record))
                 ->circular()
                 ->grow(false),
             TextColumn::make('name')
@@ -71,6 +74,7 @@ class UserTable extends ResourceTable
                 if (empty($value)) {
                     return $query;
                 }
+
                 return $query->whereHas('roles', function ($q) use ($value) {
                     $q->where('guard_name', $value);
                 });

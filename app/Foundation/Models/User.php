@@ -9,13 +9,14 @@ use App\Foundation\Services\AvatarService;
 use App\Foundation\Services\UserService;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
+use Filament\Models\Contracts\HasName;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements FilamentUser, HasAvatar
+class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
 {
     use HasFactory;
     use HasRoles;
@@ -39,12 +40,14 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
 
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->getAvatar();
+        return $this->getAvatarUrl();
     }
 
-    public function getAvatar(): string
+    public function getAvatarUrl(): string
     {
-        return app(AvatarService::class)->getUrl($this);
+        $service = app(AvatarService::class);
+
+        return $service->url($this) ?: $service->defaultUrl($this);
     }
 
     public function canAccessPanel(Panel $panel): bool
@@ -54,5 +57,10 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         }
 
         return true;
+    }
+
+    public function getFilamentName(): string
+    {
+        return $this->display_name ?: $this->name;
     }
 }

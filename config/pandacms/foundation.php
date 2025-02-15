@@ -8,5 +8,6 @@ return [
             'disk' => 'public',
             'directory' => 'avatars',
         ],
+        'default' => 'ui',
     ],
 ];

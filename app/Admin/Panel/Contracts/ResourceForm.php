@@ -13,7 +13,7 @@ abstract class ResourceForm
 
     public const OPERATION_EDIT = 'edit';
 
-    public function __construct(protected Form $form) {}
+    protected readonly Form $form;
 
     public static function getTranslation(string $key): TranslationDO
     {
@@ -22,7 +22,9 @@ abstract class ResourceForm
 
     public static function make(Form $form): Form
     {
-        return app(static::class, ['form' => $form])->buildForm();
+        return app(static::class)
+            ->form($form)
+            ->buildForm();
     }
 
     public function buildForm(): Form
@@ -43,6 +45,13 @@ abstract class ResourceForm
     public function buildCreateForm(): Form
     {
         return $this->form;
+    }
+
+    public function form(Form $form): static
+    {
+        $this->form = $form;
+
+        return $this;
     }
 
     public function isCreateForm(): bool
