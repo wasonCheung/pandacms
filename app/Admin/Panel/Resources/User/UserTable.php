@@ -9,6 +9,7 @@ use App\Foundation\Enums\DefaultGuard;
 use App\Foundation\Services\AvatarService;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Grid;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
@@ -18,41 +19,46 @@ class UserTable extends ResourceTable
 {
     public function __construct(protected AvatarService $avatarService) {}
 
-    public function editAction()
+    public function editAction(): EditAction
     {
         return EditAction::make();
     }
 
-    public function getColumns()
+    public function getColumns(): Split
     {
         return Split::make([
             ImageColumn::make('avatar')
-                ->state(fn ($record) => $this->avatarService->url($record))
-                ->defaultImageUrl(fn ($record) => $this->avatarService->defaultUrl($record))
+                ->checkFileExistence(false)
                 ->circular()
                 ->grow(false),
             TextColumn::make('name')
                 ->copyable()
                 ->description(fn ($record) => $record?->display_name)
                 ->searchable(),
-            Stack::make([
-                TextColumn::make('email')
-                    ->searchable()
-                    ->copyable()
-                    ->icon('heroicon-m-envelope'),
-                TextColumn::make('email_verified_at')
-                    ->icon('heroicon-o-check-circle')
-                    ->iconColor('success')
-                    ->dateTime(),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->iconColor(fn ($record) => $record->updated_at->isToday() ? 'success' : null)
-                    ->icon('heroicon-m-pencil-square'),
-            ]),
-        ])->from('sm');
+            Grid::make([
+                1,
+            ])
+                ->schema([
+                    Stack::make([
+                        TextColumn::make('email')
+                            ->searchable()
+                            ->copyable()
+                            ->icon('heroicon-m-envelope'),
+                        TextColumn::make('email_verified_at')
+                            ->icon('heroicon-o-check-circle')
+                            ->iconColor('success')
+                            ->dateTime(),
+                        TextColumn::make('updated_at')
+                            ->dateTime()
+                            ->iconColor(fn ($record) => $record->updated_at->isToday() ? 'success' : null)
+                            ->icon('heroicon-m-pencil-square'),
+                    ]),
+                ]),
+        ])
+            ->from('xl');
     }
 
-    public function rolesFilter()
+    public function rolesFilter(): SelectFilter
     {
         return SelectFilter::make('roles')
             ->label((string) __class(__CLASS__, 'roles_filter'))
@@ -64,7 +70,7 @@ class UserTable extends ResourceTable
             });
     }
 
-    public function guardFilter()
+    public function guardFilter(): SelectFilter
     {
         return SelectFilter::make('guard')
             ->label((string) __class(__CLASS__, 'guard_filter'))

@@ -26,6 +26,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
         'name',
         'email',
         'password',
+        'avatar',
     ];
 
     protected $hidden = [
@@ -43,11 +44,15 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
         return $this->getAvatarUrl();
     }
 
-    public function getAvatarUrl(): string
+    public function getAvatarUrl(bool $withDefault = true): ?string
     {
+        if ($withDefault === false) {
+            return $this->avatar;
+        }
+
         $service = app(AvatarService::class);
 
-        return $service->url($this) ?: $service->defaultUrl($this);
+        return $service->exists($this) ? $service->getUrl($this) : $service->getDefaultUrl($this);
     }
 
     public function canAccessPanel(Panel $panel): bool

@@ -12,8 +12,6 @@ use Filament\Forms\Components\Split;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class UserForm extends ResourceForm
 {
@@ -41,33 +39,20 @@ class UserForm extends ResourceForm
             ]);
     }
 
-    public function avatar()
+    public function avatar(): FileUpload
     {
         return FileUpload::make('avatar')
             ->hiddenLabel()
             ->alignCenter()
-            ->image()
-            ->imageResizeMode('cover')
             ->imageResizeTargetWidth('150')
             ->imageResizeTargetHeight('150')
             ->circleCropper()
             ->avatar()
-            ->afterStateHydrated(function (FileUpload $component, $record) {
-                $file = new TemporaryUploadedFile(
-                    $this->avatarService->storagePath($record),
-                    $this->avatarService->getStorageDisk(),
-                );
-                $component->state([
-                    (string) Str::uuid() => $file,
-                ]);
-            })
+            ->disk($this->avatarService->getStorageDisk())
+            ->directory($this->avatarService->getStorageDirectory())
             ->deleteUploadedFileUsing(function ($record) {
                 $this->avatarService->delete($record);
-            })
-            ->acceptedFileTypes(['image/jpeg', 'image/png'])
-            ->getUploadedFileNameForStorageUsing(fn ($record) => $this->avatarService->storageName($record))
-            ->disk($this->avatarService->getStorageDisk())
-            ->directory($this->avatarService->getStorageDirectory());
+            });
     }
 
     public function name(): TextInput
@@ -82,7 +67,7 @@ class UserForm extends ResourceForm
             ->label(self::getTranslation('name'));
     }
 
-    public function email()
+    public function email(): TextInput
     {
         return TextInput::make('email')
             ->email()
@@ -102,7 +87,7 @@ class UserForm extends ResourceForm
             ->label(self::getTranslation('password'));
     }
 
-    public function passwordConfirm()
+    public function passwordConfirm(): TextInput
     {
         return TextInput::make('password_confirmation')
             ->password()

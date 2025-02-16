@@ -13,6 +13,8 @@ use InvalidArgumentException;
 
 class AvatarService
 {
+    public const STORAGE_DIRECTORY = 'avatars';
+
     protected array $providers = [
         'ui' => UiAvatarsProvider::class,
     ];
@@ -22,17 +24,18 @@ class AvatarService
         protected FilesystemManager $filesystemManager,
     ) {}
 
-    public function url(User $user): ?string
+    public function getUrl(User $user): string
     {
-        if ($this->exists($user) === false) {
-            return null;
-        }
-        return $this->getFilesystem()->url($this->storagePath($user));
+        return $this->getFilesystem()->url($user->avatar);
     }
 
     public function exists(User $user): bool
     {
-        return $this->getFilesystem()->exists($this->storagePath($user));
+        if ($user->avatar) {
+            return $this->getFilesystem()->exists($user->avatar);
+        }
+
+        return false;
     }
 
     public function getFilesystem(): Filesystem
@@ -42,25 +45,15 @@ class AvatarService
 
     public function getStorageDisk(): string
     {
-        return $this->config->get('pandacms.foundation.avatar.storage.disk');
-    }
-
-    public function storagePath(User $user): string
-    {
-        return "{$this->getStorageDirectory()}/{$this->storageName($user)}";
+        return $this->config->get('pandacms.foundation.avatar.storage_disk');
     }
 
     public function getStorageDirectory(): string
     {
-        return $this->config->get('pandacms.foundation.avatar.storage.directory');
+        return self::STORAGE_DIRECTORY;
     }
 
-    public function storageName(User $user): string
-    {
-        return "{$user->name}.jpg";
-    }
-
-    public function defaultUrl(User $user): string
+    public function getDefaultUrl(User $user): string
     {
         /** @noinspection PhpStrictTypeCheckingInspection */
         return app($this->getDefaultAvatarProvider())->get($user);
@@ -71,7 +64,7 @@ class AvatarService
      */
     public function getDefaultAvatarProvider(): string
     {
-        $default = $this->config->get('pandacms.foundation.avatar.default');
+        $default = $this->config->get('pandacms.foundation.avatar.default_provider');
         if (isset($this->providers[$default])) {
             return $this->providers[$default];
         }
@@ -80,15 +73,22 @@ class AvatarService
 
     public function delete(User $user): bool
     {
-        return $this->getFilesystem()->delete($this->storagePath($user));
+        if ($this->exists($user)) {
+            $res = $this->getFilesystem()->delete($user->avatar);
+            if ($res) {
+                $user->avatar = null;
+
+                return $user->save();
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
-    public function defaultAvatarProvider(string $name, string $provider): static
+    public function addDefaultProvider(string $name, string $provider): void
     {
         $this->providers[$name] = $provider;
-
-        return $this;
     }
-
-
 }

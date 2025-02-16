@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 return [
     'avatar' => [
-        'storage' => [
-            'disk' => 'public',
-            'directory' => 'avatars',
-        ],
-        'default' => 'ui',
+        'default_provider' => 'ui',
+        'storage_disk' => 'public',
     ],
 ];
